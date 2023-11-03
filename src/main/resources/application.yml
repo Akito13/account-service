@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: "account"
+  config:
+    import: "configserver:http://localhost:8071"
+    name: "account"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+constant:
+  security:
+    JWT_KEY: ${JWT_KEY}
+    JWT_HEADER: "Authorization"
+    JWT_EXP: 30000
