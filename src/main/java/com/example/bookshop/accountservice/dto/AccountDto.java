@@ -14,7 +14,7 @@ import lombok.*;
 public class AccountDto {
 
     @NotNull(message = "Account ID không thể thiếu", groups = {RequireId.class})
-    private Integer accountId;
+    private Long accountId;
 
     @NotNull(message = "Họ và tên lót chưa có", groups = {RegisterInfo.class})
     @Size(message = "Họ và tên lót phải trên 1 ký tự", min = 1, groups = {RegisterInfo.class})

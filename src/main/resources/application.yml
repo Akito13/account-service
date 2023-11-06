@@ -3,22 +3,23 @@ spring:
     name: "account"
   config:
     import: "configserver:http://localhost:8071"
-    name: "account"
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    shutdown:
-      enabled: true
-  info:
-    env:
-      enabled: true
+  cloud:
+    config:
+      name: account, kafka-common, common
+  kafka:
+    consumer:
+      group-id: ${spring.application.name}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      "[spring.json.type.mapping]": AccountRegistration:com.example.bookshop.accountservice.event.topics.AccountRegistration
 
 constant:
   security:
     JWT_KEY: ${JWT_KEY}
     JWT_HEADER: "Authorization"
     JWT_EXP: 30000
+

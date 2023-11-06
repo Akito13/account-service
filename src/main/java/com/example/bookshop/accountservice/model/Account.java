@@ -14,7 +14,7 @@ public class Account {
     @Id
     @SequenceGenerator(name = "account_id_seq", sequenceName = "accounts_account_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
-    private Integer accountId;
+    private Long accountId;
     private String hoLot;
     private String ten;
     private String sdt;

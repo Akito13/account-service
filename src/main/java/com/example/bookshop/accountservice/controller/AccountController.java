@@ -3,6 +3,7 @@ package com.example.bookshop.accountservice.controller;
 import com.example.bookshop.accountservice.dto.AccountDto;
 import com.example.bookshop.accountservice.dto.ResponseDto;
 import com.example.bookshop.accountservice.dto.ResponsePayload;
+import com.example.bookshop.accountservice.event.KafkaProducer;
 import com.example.bookshop.accountservice.service.AccountServiceImpl;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,10 +26,12 @@ import java.util.List;
 public class AccountController {
 
     private final AccountServiceImpl service;
+    private final KafkaProducer kafkaProducer;
 
     @Autowired
-    public AccountController(AccountServiceImpl service) {
+    public AccountController(AccountServiceImpl service, KafkaProducer kafkaProducer) {
         this.service = service;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @PostMapping("register")
@@ -44,15 +47,7 @@ public class AccountController {
                 .statusCode(HttpStatus.CREATED)
                 .message("Tạo tài khoản thành công!")
                 .payload(payload).build();
-//        ActionCodeSettings actionCodeSettings = ActionCodeSettings.builder()
-//                .setUrl("http://localhost:8888/bookshop/user")
-//                .setHandleCodeInApp(true).build();
-//        try {
-//            String link = FirebaseAuth.getInstance().generateEmailVerificationLink(savedDto.getEmail(), actionCodeSettings);
-//            sendCus
-//        } catch (FirebaseAuthException e) {
-//            e.printStackTrace();
-//        }
+        kafkaProducer.notifyAccountRegistration(savedDto.getEmail());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

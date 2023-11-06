@@ -1,8 +1,8 @@
 package com.example.bookshop.accountservice.security;
 
+import com.example.bookshop.accountservice.CommonConstants;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class JWTGeneratorFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null) {
-            byte[] secretKeyBytes = Base64.getEncoder().encode(SecurityConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
+            byte[] secretKeyBytes = Base64.getEncoder().encode(CommonConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
 //            Keys.hmacShaKeyFor(secretKeyBytes)
             SecretKey key = new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS512.getJcaName());
             Instant now = Instant.now();
@@ -32,10 +32,10 @@ public class JWTGeneratorFilter extends OncePerRequestFilter {
                     .claim("email", auth.getPrincipal())
                     .claim("authorities", auth.getAuthorities().toArray()[0])
                     .setIssuedAt(Date.from(now))
-                    .setExpiration(Date.from(now.plusMillis(SecurityConstants.JWT_EXP)))
+                    .setExpiration(Date.from(now.plusMillis(CommonConstants.JWT_EXP)))
                     .signWith(key, SignatureAlgorithm.HS512)
                     .compact();
-            response.setHeader(SecurityConstants.JWT_HEADER, jwt);
+            response.setHeader(CommonConstants.JWT_HEADER, jwt);
         }
         filterChain.doFilter(request, response);
     }
