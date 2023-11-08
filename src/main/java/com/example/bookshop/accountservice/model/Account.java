@@ -19,6 +19,7 @@ public class Account {
     private String ten;
     private String sdt;
     private String email;
+    private String diaChi;
     @Column(name = "`password`")
 	private String password;
     private Boolean trangThai;
