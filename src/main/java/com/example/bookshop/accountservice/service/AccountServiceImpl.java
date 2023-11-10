@@ -47,8 +47,8 @@ public class AccountServiceImpl implements AccountService{
         account.setRoleId(role);
         account.setTrangThai(false);
         account.setDeleted(false);
-//        Kafka -> MailService
-        return CommonMapper.mapToAccountDto(accountRepo.save(account));
+        return CommonMapper.mapToAccountDto(account);
+//        return CommonMapper.mapToAccountDto(accountRepo.save(account));
     }
 
 

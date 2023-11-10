@@ -24,8 +24,8 @@ public class AccountDto {
     @Size(message = "Tên phải trên 1 ký tự", min = 1, groups = {RegisterInfo.class})
     private String ten;
 
-    @NotNull(message = "SĐT chưa có", groups = {RegisterInfo.class})
-    @Size(message = "SĐT không hợp lệ", min = 10, max = 11,groups = {RegisterInfo.class})
+    @NotNull(message = "SĐT chưa có")
+    @Size(message = "SĐT không hợp lệ", min = 10, max = 11)
     private String sdt;
 
     @NotBlank(message = "Email chưa có", groups = {RegisterInfo.class})

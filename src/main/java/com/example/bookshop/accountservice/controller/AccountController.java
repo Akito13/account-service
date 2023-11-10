@@ -39,7 +39,7 @@ public class AccountController {
         AccountDto savedDto = service.createAccount(accountDto);
         ResponsePayload<AccountDto> payload = ResponsePayload.<AccountDto>builder()
                 .currentPage(0).currentPageSize(1).pageSize(1).totalPages(1).recordCounts(1L)
-                .records(List.of(savedDto))
+                .records(List.of(accountDto))
                 .build();
         ResponseDto<AccountDto> response = ResponseDto.<AccountDto>builder()
                 .apiPath(request.getDescription(false))
@@ -47,7 +47,7 @@ public class AccountController {
                 .statusCode(HttpStatus.CREATED)
                 .message("Tạo tài khoản thành công!")
                 .payload(payload).build();
-        kafkaProducer.notifyAccountRegistration(savedDto.getEmail());
+//        kafkaProducer.notifyAccountRegistration(savedDto.getEmail());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
