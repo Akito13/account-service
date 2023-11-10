@@ -18,14 +18,14 @@ import java.util.Objects;
 public class AccountServiceApplication {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		ClassLoader classLoader = AccountServiceApplication.class.getClassLoader();
-		File fireBaseConfigFile = new File(Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());
-		try(FileInputStream configInputStream = new FileInputStream(fireBaseConfigFile.getAbsolutePath());) {
-			FirebaseOptions options = FirebaseOptions.builder()
-					.setCredentials(GoogleCredentials.fromStream(configInputStream))
-					.build();
-			FirebaseApp.initializeApp(options);
-		}
+//		ClassLoader classLoader = AccountServiceApplication.class.getClassLoader();
+//		File fireBaseConfigFile = new File(Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());
+//		try(FileInputStream configInputStream = new FileInputStream(fireBaseConfigFile.getAbsolutePath());) {
+//			FirebaseOptions options = FirebaseOptions.builder()
+//					.setCredentials(GoogleCredentials.fromStream(configInputStream))
+//					.build();
+//			FirebaseApp.initializeApp(options);
+//		}
 
 		SpringApplication.run(AccountServiceApplication.class, args);
 	}
