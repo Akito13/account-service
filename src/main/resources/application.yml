@@ -23,6 +23,6 @@ spring:
 constant:
   security:
     JWT_KEY: ${JWT_KEY}
-    JWT_HEADER: "Authorization"
+    JWT_HEADER: "JwtToken"
     JWT_EXP: 30000
 

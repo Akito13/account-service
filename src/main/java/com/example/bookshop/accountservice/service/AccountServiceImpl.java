@@ -58,6 +58,7 @@ public class AccountServiceImpl implements AccountService{
         if(optionalAccount.isEmpty() || optionalAccount.get().getDeleted()){
             throw new AccountNotFoundException("Tài khoản không tồn tại");
         }
+        System.out.println("QUA NE");
         Account foundAccount = optionalAccount.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(foundAccount.getRoleId().getRoleId()));
