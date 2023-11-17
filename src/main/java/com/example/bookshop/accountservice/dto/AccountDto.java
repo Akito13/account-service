@@ -36,7 +36,7 @@ public class AccountDto {
     @Size(message = "Mật khẩu phãi từ 8 đến 16 ký tự", min = 8, max = 16, groups = {RegisterInfo.class})
     private String password;
 
-//    private String role;
+    private String role;
 //
 //    private Boolean trangThai;
 //

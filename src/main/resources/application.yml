@@ -5,7 +5,7 @@ spring:
     import: "configserver:http://localhost:8071"
   cloud:
     config:
-      name: account, kafka-common, common
+      name: account, kafka-common, common, jwt-common
   kafka:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -19,10 +19,4 @@ spring:
             use:
               type:
                 headers: false
-
-constant:
-  security:
-    JWT_KEY: ${JWT_KEY}
-    JWT_HEADER: "JwtToken"
-    JWT_EXP: 30000
 

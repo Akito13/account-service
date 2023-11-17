@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class CommonConstants {
     public static String JWT_KEY;
     public static String JWT_HEADER;
-    public static Long JWT_EXP;
+    public static Integer JWT_EXP;
     public static String KAFKA_TOPIC_ACCOUNT_REGISTRATION;
     public static String KAFKA_TOPIC_ACCOUNT_CONFIRMED;
     public static Long KAFKA_BACKOFF_INTERVAL;
@@ -22,7 +22,7 @@ public class CommonConstants {
         CommonConstants.JWT_HEADER = header;
     }
     @Value("${constant.security.JWT_EXP}")
-    public void setJwtHeader(Long expiration) {
+    public void setJwtHeader(Integer expiration) {
         CommonConstants.JWT_EXP = expiration;
     }
     @Value("${constant.kafka.account-registration}")

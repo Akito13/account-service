@@ -1,11 +1,10 @@
 package com.example.bookshop.accountservice.config;
 
 import com.example.bookshop.accountservice.security.AuthenticationFilter;
-import com.example.bookshop.accountservice.security.JWTGeneratorFilter;
+import com.example.bookshop.accountservice.security.AuthorizationFilter;
 import com.example.bookshop.accountservice.service.AccountService;
-import com.example.bookshop.accountservice.service.AccountServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,38 +15,41 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity {
 
-    public AccountService userService;
-    public PasswordEncoder pwdEncoder;
+    private AccountService userService;
+    private PasswordEncoder pwdEncoder;
+    private ObjectMapper mapper;
 
     @Autowired
-    public WebSecurity(AccountService userService, PasswordEncoder pwdEncoder) {
+    public WebSecurity(AccountService userService, PasswordEncoder pwdEncoder, ObjectMapper mapper) {
         this.userService = userService;
         this.pwdEncoder = pwdEncoder;
+        this.mapper = mapper;
     }
+
+//    @Bean
+//    RestAuthenticationFailureHandler authenticationFailureHandler() {
+//        return new RestAuthenticationFailureHandler();
+//    }
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(pwdEncoder);
-
-
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager);
+
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService, mapper, authenticationManager);
         authenticationFilter.setFilterProcessesUrl("/api/account/auth");
 
-        http
+        AuthorizationFilter authorizationFilter = new AuthorizationFilter(authenticationManager);
+
+        http.cors(AbstractHttpConfigurer::disable)
 //                .cors(configurer -> configurer.configurationSource(r -> {
 //                    CorsConfiguration configuration = new CorsConfiguration();
 //                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
@@ -62,8 +64,12 @@ public class WebSecurity {
                 .authorizeHttpRequests(registry ->
                         registry
                                 .requestMatchers("/api/account/register").permitAll()
+                                .requestMatchers("/api/account/change").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/api/account").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/api/account/auth").permitAll())
+                .addFilter(authorizationFilter)
                 .addFilter(authenticationFilter)
+//                .addFilterBefore()
                 .authenticationManager(authenticationManager)
 //                .addFilterAfter(new JWTGeneratorFilter(), AuthenticationFilter.class)
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));

@@ -39,7 +39,6 @@ public class AccountServiceImpl implements AccountService{
         if(optionalAccount.isPresent() && !optionalAccount.get().getDeleted()){
             throw new AccountAlreadyExistsException("Tài khoản đã tồn tại với email " + accountDto.getEmail());
         }
-//        accountDto.setPassword(pwdEncoder.encode(accountDto.getPassword()));
         Account account = CommonMapper.mapToAccount(accountDto);
         account.setPassword(pwdEncoder.encode(accountDto.getPassword()));
         Role role = new Role();
@@ -47,18 +46,40 @@ public class AccountServiceImpl implements AccountService{
         account.setRoleId(role);
         account.setTrangThai(false);
         account.setDeleted(false);
-        return CommonMapper.mapToAccountDto(account);
-//        return CommonMapper.mapToAccountDto(accountRepo.save(account));
+//        return CommonMapper.mapToAccountDto(account);
+        return CommonMapper.mapToAccountDto(accountRepo.save(account));
     }
 
+    public AccountDto retrieveAccount(Long accountId, String email) {
+        Optional<Account> result = accountRepo.findById(accountId);
+        if(result.isEmpty()) {
+            return null;
+        }
+        Account account = result.get();
+        if(account.getDeleted() ||
+            !account.getEmail().equals(email) ||
+            !account.getTrangThai() ||
+            account.getRoleId().getRoleId().equals("ROLE_ADMIN")) {
+            return null;
+        }
+        return CommonMapper.mapToAccountDto(account);
+    }
+
+    @Override
+    public Account getAccountByEmail(String email) {
+        Optional<Account> result = accountRepo.findByEmail(email);
+        if(result.isEmpty()){
+            throw new AccountNotFoundException("Tài khoản không tồn tại");
+        }
+        return result.get();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Account> optionalAccount = accountRepo.findByEmail(email);
         if(optionalAccount.isEmpty() || optionalAccount.get().getDeleted()){
-            throw new AccountNotFoundException("Tài khoản không tồn tại");
+            throw new UsernameNotFoundException(email);
         }
-        System.out.println("QUA NE");
         Account foundAccount = optionalAccount.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(foundAccount.getRoleId().getRoleId()));

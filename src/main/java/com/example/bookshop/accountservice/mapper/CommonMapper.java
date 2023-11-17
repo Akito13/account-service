@@ -18,7 +18,7 @@ public class CommonMapper {
                 .sdt(account.getSdt())
                 .hoLot(account.getHoLot())
                 .ten(account.getTen())
-//                .role(account.getRoleId().getRoleId())
+                .role(account.getRoleId().getRoleId())
 //                .trangThai(account.getTrangThai())
 //                .deleted(account.getDeleted())
                 .build();
