@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(CommonMapper.buildErrorResponse(exception, request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidBodyException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidBodyException(InvalidBodyException exception, WebRequest request){
+        return new ResponseEntity<>(CommonMapper.buildErrorResponse(exception, request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
 //    @ExceptionHandler(AuthenticationServiceException.class)
 //    public ResponseEntity<ErrorResponseDto> handleAuthenticationServiceException(AuthenticationServiceException exception, WebRequest request){
 //        return new ResponseEntity<>(CommonMapper.buildErrorResponse(exception, request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);

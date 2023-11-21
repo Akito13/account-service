@@ -49,9 +49,31 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<Boolean> searchAccount(@RequestParam("id") Long accountId,
                                                  Authentication auth) {
-        AccountDto accountDto = service.retrieveAccount(accountId, auth.getName());
+        AccountDto accountDto = service.getAndCheckValidAccount(accountId, auth.getName());
         if(accountDto == null)
             return new ResponseEntity<>( false,HttpStatus.OK);
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @GetMapping("{userId}")
+    public ResponseEntity<ResponseDto<AccountDto>> getAccount(@PathVariable Long userId, WebRequest request,Authentication authentication){
+        AccountDto accountDto = service.getAccount(userId, authentication);
+        ResponsePayload<AccountDto> payload = ResponsePayload.<AccountDto>builder()
+                .currentPage(0).currentPageSize(1).pageSize(1).totalPages(1).recordCounts(1L)
+                .records(List.of(accountDto))
+                .build();
+        ResponseDto<AccountDto> response = ResponseDto.<AccountDto>builder()
+                .apiPath(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.OK)
+                .message("OK")
+                .payload(payload).build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("{userId}")
+    public ResponseEntity updateAccount(@PathVariable Long userId, @RequestBody AccountDto accountDto, Authentication auth) {
+        service.updateAccount(userId, accountDto, auth);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

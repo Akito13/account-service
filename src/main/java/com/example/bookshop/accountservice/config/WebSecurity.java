@@ -65,7 +65,8 @@ public class WebSecurity {
                         registry
                                 .requestMatchers("/api/account/register").permitAll()
                                 .requestMatchers("/api/account/change").authenticated()
-                                .requestMatchers(HttpMethod.GET,"/api/account").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/api/account", "/api/account/{userId:[\\d+]}").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/account/{userId:[\\d+]}").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/api/account/auth").permitAll())
                 .addFilter(authorizationFilter)
                 .addFilter(authenticationFilter)
