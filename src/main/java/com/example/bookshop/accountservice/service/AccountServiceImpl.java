@@ -100,13 +100,6 @@ public class AccountServiceImpl implements AccountService{
         if(!account.getRoleId().getRoleId().equals(accountDto.getRole()) || !Objects.equals(account.getAccountId(), accountDto.getAccountId())) {
             throw new InvalidBodyException("Thông tin không hợp lệ");
         }
-//        if(!hasAccountInfoChanged(account, accountDto)){
-//            System.out.println("Chưa thay đổi");
-//
-//        } else {
-//            System.out.println("Đã thay đổi");
-//            System.out.println(accountDto.getSdt());
-//        }
         String encodedPwd = account.getPassword();
         boolean trangThai = account.getTrangThai();
         boolean deleted = account.getDeleted();

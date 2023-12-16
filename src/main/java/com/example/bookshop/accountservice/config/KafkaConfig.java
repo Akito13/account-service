@@ -33,7 +33,10 @@ public class KafkaConfig {
     public NewTopic accountRegistrationTopic() {
         return TopicBuilder.name(CommonConstants.KAFKA_TOPIC_ACCOUNT_REGISTRATION).build();
     }
-
+    @Bean
+    public NewTopic accountPasswordChangeTopic() {
+        return TopicBuilder.name(CommonConstants.KAFKA_TOPIC_ACCOUNT_PASSWORD_CHANGE).build();
+    }
     @Bean
     public DefaultErrorHandler kafkaErrorHandler() {
         BackOff fixedBackOff = new FixedBackOff(CommonConstants.KAFKA_BACKOFF_INTERVAL, CommonConstants.KAFKA_BACKOFF_MAX_ATTEMPTS);

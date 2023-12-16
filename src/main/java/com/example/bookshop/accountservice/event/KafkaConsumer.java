@@ -14,10 +14,12 @@ import java.util.Optional;
 @Service
 public class KafkaConsumer {
     private final AccountRepository accountRepo;
+    private final PasswordEncoder pwdEncoder;
 
     @Autowired
-    public KafkaConsumer(AccountRepository accountRepo) {
+    public KafkaConsumer(AccountRepository accountRepo, PasswordEncoder pwdEncoder) {
         this.accountRepo = accountRepo;
+        this.pwdEncoder = pwdEncoder;
     }
 
     @KafkaListener(
@@ -36,6 +38,27 @@ public class KafkaConsumer {
         Account foundAccount = optionalAccount.get();
         foundAccount.setTrangThai(true);
         accountRepo.save(foundAccount);
+    }
+
+    @KafkaListener(
+            topics = "${constant.kafka.account-password-change-confirmed}",
+            groupId = "${spring.kafka.consumer.group-id}",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
+    public void consumeAccountPasswordChangeConfirmed(ConsumerRecord<String, String> record) {
+        String[] info = record.value().split(":");
+        String email = info[0];
+        String password = info[1];
+        try {
+            Optional<Account> result = accountRepo.findByEmail(email);
+            if(result.isPresent()) {
+                Account account = result.get();
+                account.setPassword(pwdEncoder.encode(password));
+                accountRepo.save(account);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 //    @KafkaListener(topics = "${constant.kafka.account-registration}", groupId = "${spring.kafka.consumer.group-id}")

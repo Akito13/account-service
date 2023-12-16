@@ -18,4 +18,9 @@ public class KafkaProducer {
         accountRegistrationTemplate.send(CommonConstants.KAFKA_TOPIC_ACCOUNT_REGISTRATION, email);
         System.out.println("SENT " + email + " TO KAFKA BROKERS FOR ACTIVATION PROCESS");
     }
+
+    public void notifyAccountPasswordChange(String info) {
+        accountRegistrationTemplate.send(CommonConstants.KAFKA_TOPIC_ACCOUNT_PASSWORD_CHANGE, info);
+        System.out.println("SENT " + info + " TO KAFKA BROKERS FOR PASSWORD CHANGE REQUEST");
+    }
 }

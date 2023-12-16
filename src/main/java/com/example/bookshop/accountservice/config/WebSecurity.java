@@ -64,10 +64,12 @@ public class WebSecurity {
                 .authorizeHttpRequests(registry ->
                         registry
                                 .requestMatchers("/api/account/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/account/auth").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/account/email", "/api/account/password").permitAll()
+//                                .requestMatchers(HttpMethod.PUT, "/api/account/password").permitAll()
                                 .requestMatchers("/api/account/change").authenticated()
                                 .requestMatchers(HttpMethod.GET,"/api/account", "/api/account/{userId:[\\d+]}").authenticated()
-                                .requestMatchers(HttpMethod.PUT, "/api/account/{userId:[\\d+]}").authenticated()
-                                .requestMatchers(HttpMethod.POST, "/api/account/auth").permitAll())
+                                .requestMatchers(HttpMethod.PUT, "/api/account/{userId:[\\d+]}").authenticated())
                 .addFilter(authorizationFilter)
                 .addFilter(authenticationFilter)
 //                .addFilterBefore()

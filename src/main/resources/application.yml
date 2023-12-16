@@ -6,17 +6,3 @@ spring:
   cloud:
     config:
       name: account, kafka-common, common, jwt-common
-  kafka:
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer:
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: "*"
-            use:
-              type:
-                headers: false
-
