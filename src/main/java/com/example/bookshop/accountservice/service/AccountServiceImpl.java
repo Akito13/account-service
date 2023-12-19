@@ -24,7 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class AccountServiceImpl implements AccountService{
+public class
+AccountServiceImpl implements AccountService{
 
     private final AccountRepository accountRepo;
     private final PasswordEncoder pwdEncoder;
